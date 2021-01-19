@@ -1,6 +1,6 @@
 package net.kunmc.lab.gtawanteddisplaymod.events;
 
-import net.kunmc.lab.gtawanteddisplaymod.utils.RenderUtils;
+import net.kunmc.lab.gtawanteddisplaymod.utils.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -16,7 +16,7 @@ public class RenderEvent
             return;
 
         FontRenderer fr = Minecraft.getInstance().fontRenderer;
-        fr.drawStringWithShadow("Test!!!", 20, 20, RenderUtils.getColor(255, 0, 255, 0));
+        fr.drawStringWithShadow("Test!!!", 20, 20, RenderUtil.getColor(255, 0, 255, 0));
     }
 
 }

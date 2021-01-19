@@ -25,6 +25,8 @@ public class PacketDispatcher
         channel.registerMessage(0, PacketContainer.class,
                 PacketContainer::encode,
                 PacketContainer::decode,
-                PacketContainer::handle);
+                PacketContainer::handle
+        );
     }
+
 }

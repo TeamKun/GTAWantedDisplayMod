@@ -7,7 +7,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.function.Supplier;
 
 public class PacketContainer
@@ -26,10 +25,9 @@ public class PacketContainer
         buffer.writeByte(0);
         buffer.writeInt(messages.maxWanted);
         buffer.writeString("|");
-        buffer.writeDouble(messages.maxWanted);
+        buffer.writeDouble(messages.nowWanted);
         buffer.writeByte(0);
     }
-
 
     public static PacketContainer decode(PacketBuffer buffer)
     {
@@ -58,5 +56,7 @@ public class PacketContainer
     {
         GTAWantedDisplayMod.instance.maxWanted = messager.maxWanted;
         GTAWantedDisplayMod.instance.nowWanted = messager.nowWanted;
+        ctx.get().setPacketHandled(true);
     }
+
 }

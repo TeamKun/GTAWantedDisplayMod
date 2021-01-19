@@ -28,8 +28,8 @@ public class RenderEvent
         final double now = GTAWantedDisplayMod.instance.nowWanted;
         final int max = GTAWantedDisplayMod.instance.maxWanted;
 
-        String nowS = StringUtils.repeat(wantedStar, (int) now);
-        String maxS = StringUtils.repeat(noWantedStar, (int) (max - now));
+        String nowS = StringUtils.repeat(wantedStar, (int) Math.floor(now));
+        String maxS = StringUtils.repeat(noWantedStar, (int) (max - Math.floor(now)));
         String completeStar = maxS + nowS;
         Matcher matcher = pattern.matcher(completeStar);
 

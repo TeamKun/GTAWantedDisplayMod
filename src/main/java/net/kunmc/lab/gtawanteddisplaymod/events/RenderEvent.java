@@ -1,6 +1,5 @@
 package net.kunmc.lab.gtawanteddisplaymod.events;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.kunmc.lab.gtawanteddisplaymod.GTAWantedDisplayMod;
 import net.kunmc.lab.gtawanteddisplaymod.utils.RenderUtil;

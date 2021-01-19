@@ -3,9 +3,6 @@ package net.kunmc.lab.gtawanteddisplaymod.utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class RenderUtil
 {
 

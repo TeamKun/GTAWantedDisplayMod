@@ -1,6 +1,7 @@
 package net.kunmc.lab.gtawanteddisplaymod.events;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.kunmc.lab.gtawanteddisplaymod.GTAWantedDisplayMod;
 import net.kunmc.lab.gtawanteddisplaymod.utils.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -8,6 +9,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,32 +31,34 @@ public class RenderEvent
 
         FontRenderer fr = Minecraft.getInstance().fontRenderer;
 
-        String display = genStars();
-        int stringSize = fr.getStringWidth(StringUtils.split(display, ',')[0]);
+        String display = genWantedStars();
         int width = Minecraft.getInstance().func_228018_at_().getWidth() / 2;
         int height = Minecraft.getInstance().func_228018_at_().getHeight() / 2;
         System.out.println("H:" + height);
         System.out.println("W:" + width);
         int PADDING = 10;
 
-        GlStateManager.func_227740_m_();
-        GlStateManager.func_227672_b_(30, 30, 0);
+        float size = 1.3f;
+        GL11.glScalef(size,size,size);
+        int stringSize = fr.getStringWidth(StringUtils.split(display, ',')[0]);
+        float mSize = (float)Math.pow(size,-1);
         AtomicInteger par = new AtomicInteger();
         Arrays.stream(StringUtils.split(display, ','))
                 .forEachOrdered(s -> {
                     fr.drawStringWithShadow(s,
-                            (width - stringSize - PADDING) ,
+                            Math.round((width - stringSize - PADDING) / (double) size),
                             PADDING + par.get(),
-                            RenderUtil.getColor(255, 255, 255, 0));
+                            RenderUtil.getColor(255, 255, 255, 255));
                     par.set(par.get() + 11);
                 });
-        GlStateManager.func_227672_b_(1, 1, 0);
+        GL11.glScalef(mSize,mSize,mSize);
+
     }
 
-    private static String genStars()
+    private static String genWantedStars()
     {
-        final char wantedStar = '\u272c';
         final char noWantedStar = '\u2729';
+        final char wantedStar = '\u272c';
 
         final double now = GTAWantedDisplayMod.instance.nowWanted;
         final int max = GTAWantedDisplayMod.instance.maxWanted;
@@ -69,6 +73,14 @@ public class RenderEvent
         while(matcher.find())
             xe.append(matcher.group()).append(",");
 
-        return xe.toString();
+        StringBuilder xb = new StringBuilder();
+
+        for (String a: xe.toString().split(""))
+            if (a.equals(String.valueOf(wantedStar)))
+                xb.append(ChatFormatting.WHITE).append(a);
+            else
+                xb.append(ChatFormatting.DARK_GRAY).append(ChatFormatting.BOLD).append(a);
+
+        return xb.toString();
     }
 }

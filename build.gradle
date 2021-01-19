@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 
 group = 'net.kunmc.lab'
 version = '1.0-SNAPSHOT'
-archivesBaseName = 'gtawanteddisplaymod'
+archivesBaseName = 'GTAWantedDisplayMod'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 

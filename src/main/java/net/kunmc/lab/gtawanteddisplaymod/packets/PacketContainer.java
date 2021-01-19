@@ -21,7 +21,7 @@ public class PacketContainer
     }
 
     public static void encode(PacketContainer messages, PacketBuffer buffer)
-    { //パケット規則に合わせて書き込む
+    {
         buffer.writeByte(0);
         buffer.writeInt(messages.maxWanted);
         buffer.writeString("|");

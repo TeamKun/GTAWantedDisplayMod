@@ -21,7 +21,6 @@ public class RenderEvent
             new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star_gray.png"),
             new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star_white.png"),
     };
-    private static final ResourceLocation star = new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star.png");
 
     private static int[] genWantedStars()
     {
@@ -32,40 +31,31 @@ public class RenderEvent
         for (int i = 0; i < max; i++) {
             if (i < now)
                 list.add(0);
-            else if (now - i < 0.6)
-                list.add(1);
-            else
+            else if (GTAWantedDisplayMod.instance.accessFlag && i - now < 0.8)
                 list.add(2);
+            else
+                list.add(1);
         }
-        return ArrayUtils.toPrimitive(list.toArray(new Integer[0]));
-
         /*
-        // final char noWantedStar = '\u2729';
-        // final char wantedStar = '\u272c';
-
-        String nowS = StringUtils.repeat(wantedStar, (int) Math.floor(now));
-        String maxS = StringUtils.repeat(noWantedStar, (int) (max - Math.floor(now)));
-        String completeStar = maxS + nowS;
-
-        StringBuilder xb = new StringBuilder();
 
         boolean isPassed = false;
-        for (String a: completeStar.split(""))
+        for (String a : xe.toString().split(""))
             if (a.equals(String.valueOf(wantedStar)))
             {
                 if (!isPassed && GTAWantedDisplayMod.instance.accessFlag && String.valueOf(now).endsWith(".5"))
                 {
-                    xb.append("B");
+                    xb.append(ChatFormatting.BLACK).append(a);
                     isPassed = true;
                     continue;
                 }
-                xb.append("W");
+                xb.append(ChatFormatting.WHITE).append(a);
             }
             else
-                xb.append("D");
+                xb.append(ChatFormatting.DARK_GRAY).append(ChatFormatting.BOLD).append(a);
 
-        return xb.toString();
-        */
+         */
+
+        return ArrayUtils.toPrimitive(list.toArray(new Integer[0]));
     }
 
 
@@ -79,19 +69,17 @@ public class RenderEvent
             return;
         draw(genWantedStars());
 
-        //draw(GTAWantedDisplayMod.instance.maxWanted, (int) GTAWantedDisplayMod.instance.nowWanted, 0);
-
     }
 
     private void draw(int... stars)
     {
-        int width = Minecraft.getInstance().getMainWindow().getWidth() / 2;
+        int width = Minecraft.getInstance().getMainWindow().getScaledWidth();
 
         int line = 1;
         int count = 1;
-        int buffer = 0;
-        for(int star: stars)
-                draw(line * 10, width - ((count++ * 16) + 2), star);
+        for (int star : stars)
+            draw(width - ((count++ * 16) + 2), line * 10, star);
+
     }
 
     private static void draw(int x, int y, int index)
@@ -99,18 +87,7 @@ public class RenderEvent
         final int size = 16;
         Minecraft.getInstance().getRenderManager().textureManager.bindTexture(stars[index]);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-        //AbstractGui.blit(int x, int y, int textureX, int textureY, int width, int height, int textureWidth, int textureHeight);
-        // AbstractGui.blit(x, y, 0, 0, size, size, size * 3, size);
         AbstractGui.blit(x, y, 0, 0, size, size, size, size);
-        //AbstractGui.blit(0, 0, 0, 0, 0, 32, 32, 32, 32);
     }
-
-    //Some blit param namings , thank you Mekanism
-    //blit(int x, int y, int textureX, int textureY, int width, int height);
-    //blit(int x, int y, TextureAtlasSprite icon, int width, int height);
-    //blit(int x, int y, int textureX, int textureY, int width, int height, int textureWidth, int textureHeight);
-    //blit(int x, int y, int zLevel, float textureX, float textureY, int width, int height, int textureWidth, int textureHeight);
-    //blit(int x, int y, int desiredWidth, int desiredHeight, int textureX, int textureY, int width, int height, int textureWidth, int textureHeight);
-    //innerBlit(int x, int endX, int y, int endY, int zLevel, int width, int height, float textureX, float textureY, int textureWidth, int textureHeight);
 
 }

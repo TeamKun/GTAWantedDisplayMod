@@ -15,10 +15,10 @@ public class PacketContainer
     private final int nowWanted;
     private final int flags;
 
-    public PacketContainer(int maxWanted, int nowWanted, int flags)
+    public PacketContainer(int nowWanted, int maxWanted, int flags)
     {
-        this.maxWanted = maxWanted;
         this.nowWanted = nowWanted;
+        this.maxWanted = maxWanted;
         this.flags = flags;
     }
 
@@ -45,11 +45,11 @@ public class PacketContainer
             if (messageWorker.length != 3)
                 throw new IllegalArgumentException("Malformed packet received.");
 
-            int max = Integer.parseInt(messageWorker[0]);
-            int now = Integer.parseInt(messageWorker[1]);
+            int now = Integer.parseInt(messageWorker[0]);
+            int max = Integer.parseInt(messageWorker[1]);
             int flags = Integer.parseInt(messageWorker[2]);
 
-            return new PacketContainer(max, now, flags);
+            return new PacketContainer(now, max, flags);
         }
         catch (Exception e)
         {
@@ -60,8 +60,8 @@ public class PacketContainer
 
     public static void handle(PacketContainer message, Supplier<NetworkEvent.Context> ctx)
     {
-        GTAWantedDisplayMod.instance.maxWanted = message.maxWanted;
         GTAWantedDisplayMod.instance.nowWanted = message.nowWanted;
+        GTAWantedDisplayMod.instance.maxWanted = message.maxWanted;
         GTAWantedDisplayMod.instance.flags = message.flags;
         ctx.get().setPacketHandled(true);
     }

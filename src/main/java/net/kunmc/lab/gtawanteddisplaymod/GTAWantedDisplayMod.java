@@ -42,6 +42,11 @@ public class GTAWantedDisplayMod
     @SubscribeEvent
     public void onTick(TickEvent e)
     {
+        if ((flags & 0x01) != 0x01) {
+            blinkFlag = false;
+            return;
+        }
+
         if (timer > 60)
         {
             blinkFlag = !blinkFlag;

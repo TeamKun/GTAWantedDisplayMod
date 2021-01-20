@@ -25,15 +25,15 @@ public class RenderEvent
     private static int[] genWantedStars()
     {
         ArrayList<Integer> list = new ArrayList<>();
-        final double now = GTAWantedDisplayMod.instance.nowWanted;
-        final int max = Math.max((int) now, GTAWantedDisplayMod.instance.maxWanted);
+        final int now = GTAWantedDisplayMod.instance.nowWanted;
+        final int max = Math.max(now, GTAWantedDisplayMod.instance.maxWanted);
 
         for (int i = 0; i < max; i++) {
-            if (i <= (int) now - 1)
+            if (i < now)
                 if (GTAWantedDisplayMod.instance.blinkFlag)
-                    list.add(0);
-                else
                     list.add(2);
+                else
+                    list.add(0);
             else
                 list.add(1);
         }

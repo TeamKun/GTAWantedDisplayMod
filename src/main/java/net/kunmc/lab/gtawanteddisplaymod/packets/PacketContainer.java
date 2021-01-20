@@ -12,20 +12,24 @@ import java.util.function.Supplier;
 public class PacketContainer
 {
     private final int maxWanted;
-    private final double nowWanted;
+    private final int nowWanted;
+    private final int flags;
 
-    public PacketContainer(int maxWanted, double nowWanted)
+    public PacketContainer(int maxWanted, int nowWanted, int flags)
     {
         this.maxWanted = maxWanted;
         this.nowWanted = nowWanted;
+        this.flags = flags;
     }
 
-    public static void encode(PacketContainer messages, PacketBuffer buffer)
+    public static void encode(PacketContainer message, PacketBuffer buffer)
     {
         buffer.writeByte(0);
-        buffer.writeInt(messages.maxWanted);
+        buffer.writeInt(message.nowWanted);
         buffer.writeString("|");
-        buffer.writeDouble(messages.nowWanted);
+        buffer.writeInt(message.maxWanted);
+        buffer.writeString("|");
+        buffer.writeInt(message.flags);
         buffer.writeByte(0);
     }
 
@@ -38,24 +42,27 @@ public class PacketContainer
             bytes = ArrayUtils.remove(bytes, 0);
             String messageString = StringUtils.toEncodedString(bytes, StandardCharsets.UTF_8);
             String[] messageWorker = StringUtils.split(messageString, "|");
-            if (messageWorker.length != 2)
+            if (messageWorker.length != 3)
                 throw new IllegalArgumentException("Malformed packet received.");
 
             int max = Integer.parseInt(messageWorker[0]);
-            double now = Double.parseDouble(messageWorker[1]);
-            return new PacketContainer(max, now);
+            int now = Integer.parseInt(messageWorker[1]);
+            int flags = Integer.parseInt(messageWorker[2]);
+
+            return new PacketContainer(max, now, flags);
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            return new PacketContainer(0, 0);
+            return new PacketContainer(0, 0, 0);
         }
     }
 
-    public static void handle(PacketContainer messager, Supplier<NetworkEvent.Context> ctx)
+    public static void handle(PacketContainer message, Supplier<NetworkEvent.Context> ctx)
     {
-        GTAWantedDisplayMod.instance.maxWanted = messager.maxWanted;
-        GTAWantedDisplayMod.instance.nowWanted = messager.nowWanted;
+        GTAWantedDisplayMod.instance.maxWanted = message.maxWanted;
+        GTAWantedDisplayMod.instance.nowWanted = message.nowWanted;
+        GTAWantedDisplayMod.instance.flags = message.flags;
         ctx.get().setPacketHandled(true);
     }
 

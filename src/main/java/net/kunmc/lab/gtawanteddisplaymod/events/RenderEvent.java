@@ -30,18 +30,16 @@ public class RenderEvent
 
         for (int i = 0; i < max; i++) {
             if (i <= (int) now - 1)
-                list.add(2);
-            else if (GTAWantedDisplayMod.instance.accessFlag && i - (now - 1) < 0.8)
-                list.add(2);
-            else if (!GTAWantedDisplayMod.instance.accessFlag && i - (now - 1) < 0.8)
-                list.add(0);
+                if (GTAWantedDisplayMod.instance.blinkFlag)
+                    list.add(0);
+                else
+                    list.add(2);
             else
                 list.add(1);
         }
 
         return ArrayUtils.toPrimitive(list.toArray(new Integer[0]));
     }
-
 
     @SubscribeEvent
     public void onRender(final RenderGameOverlayEvent.Post event)

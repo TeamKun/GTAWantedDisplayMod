@@ -14,10 +14,11 @@ public class GTAWantedDisplayMod
     public static GTAWantedDisplayMod instance;
 
     public int maxWanted;
-    public double nowWanted;
+    public int nowWanted;
+    public int flags;
 
     private int timer;
-    public boolean accessFlag;
+    public boolean blinkFlag;
 
     private final PacketDispatcher packetDispatcher;
 
@@ -26,7 +27,8 @@ public class GTAWantedDisplayMod
         instance = this;
 
         maxWanted = 10;
-        nowWanted = 0.0;
+        nowWanted = 0;
+        flags = 0x00;
 
         timer = 0;
 
@@ -42,7 +44,7 @@ public class GTAWantedDisplayMod
     {
         if (timer > 60)
         {
-            accessFlag = !accessFlag;
+            blinkFlag = !blinkFlag;
             timer = 0;
         }
         timer++;

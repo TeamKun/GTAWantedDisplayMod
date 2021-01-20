@@ -29,31 +29,15 @@ public class RenderEvent
         final int max = Math.max((int) now, GTAWantedDisplayMod.instance.maxWanted);
 
         for (int i = 0; i < max; i++) {
-            if (i < now)
-                list.add(0);
-            else if (GTAWantedDisplayMod.instance.accessFlag && i - now < 0.8)
+            if (i <= (int) now - 1)
                 list.add(2);
+            else if (GTAWantedDisplayMod.instance.accessFlag && i - (now - 1) < 0.8)
+                list.add(2);
+            else if (!GTAWantedDisplayMod.instance.accessFlag && i - (now - 1) < 0.8)
+                list.add(0);
             else
                 list.add(1);
         }
-        /*
-
-        boolean isPassed = false;
-        for (String a : xe.toString().split(""))
-            if (a.equals(String.valueOf(wantedStar)))
-            {
-                if (!isPassed && GTAWantedDisplayMod.instance.accessFlag && String.valueOf(now).endsWith(".5"))
-                {
-                    xb.append(ChatFormatting.BLACK).append(a);
-                    isPassed = true;
-                    continue;
-                }
-                xb.append(ChatFormatting.WHITE).append(a);
-            }
-            else
-                xb.append(ChatFormatting.DARK_GRAY).append(ChatFormatting.BOLD).append(a);
-
-         */
 
         return ArrayUtils.toPrimitive(list.toArray(new Integer[0]));
     }
@@ -78,7 +62,14 @@ public class RenderEvent
         int line = 1;
         int count = 1;
         for (int star : stars)
+        {
+            if (count > 10)
+            {
+                count = 1;
+                line++;
+            }
             draw(width - ((count++ * 16) + 2), line * 10, star);
+        }
 
     }
 
@@ -87,6 +78,7 @@ public class RenderEvent
         final int size = 16;
         Minecraft.getInstance().getRenderManager().textureManager.bindTexture(stars[index]);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
+        RenderSystem.enableBlend();
         AbstractGui.blit(x, y, 0, 0, size, size, size, size);
     }
 

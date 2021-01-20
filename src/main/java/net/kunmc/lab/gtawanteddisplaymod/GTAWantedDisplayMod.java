@@ -25,7 +25,7 @@ public class GTAWantedDisplayMod
     {
         instance = this;
 
-        maxWanted = 0;
+        maxWanted = 10;
         nowWanted = 0.0;
 
         timer = 0;

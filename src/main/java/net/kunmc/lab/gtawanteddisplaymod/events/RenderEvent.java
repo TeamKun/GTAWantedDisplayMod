@@ -1,40 +1,47 @@
 package net.kunmc.lab.gtawanteddisplaymod.events;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.kunmc.lab.gtawanteddisplaymod.GTAWantedDisplayMod;
-import net.kunmc.lab.gtawanteddisplaymod.utils.RenderUtil;
-import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.opengl.GL11;
+import org.apache.commons.lang3.ArrayUtils;
 
-import java.awt.image.RenderedImage;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class RenderEvent
 {
     public static Pattern pattern = Pattern.compile(".{1,5}");
 
-    private static String genWantedStars()
-    {
-        final char noWantedStar = '\u2729';
-        final char wantedStar = '\u272c';
+    private static final ResourceLocation[] stars = {
+            new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star_black.png"),
+            new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star_gray.png"),
+            new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star_white.png"),
+    };
+    private static final ResourceLocation star = new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star.png");
 
+    private static int[] genWantedStars()
+    {
+        ArrayList<Integer> list = new ArrayList<>();
         final double now = GTAWantedDisplayMod.instance.nowWanted;
-        final int max = GTAWantedDisplayMod.instance.maxWanted;
+        final int max = Math.max((int) now, GTAWantedDisplayMod.instance.maxWanted);
+
+        for (int i = 0; i < max; i++) {
+            if (i < now)
+                list.add(0);
+            else if (now - i < 0.6)
+                list.add(1);
+            else
+                list.add(2);
+        }
+        return ArrayUtils.toPrimitive(list.toArray(new Integer[0]));
+
+        /*
+        // final char noWantedStar = '\u2729';
+        // final char wantedStar = '\u272c';
 
         String nowS = StringUtils.repeat(wantedStar, (int) Math.floor(now));
         String maxS = StringUtils.repeat(noWantedStar, (int) (max - Math.floor(now)));
@@ -58,6 +65,7 @@ public class RenderEvent
                 xb.append("D");
 
         return xb.toString();
+        */
     }
 
 
@@ -69,32 +77,32 @@ public class RenderEvent
 
         if (GTAWantedDisplayMod.instance.maxWanted == 0 || GTAWantedDisplayMod.instance.nowWanted == 0)
             return;
-
         draw(genWantedStars());
+
+        //draw(GTAWantedDisplayMod.instance.maxWanted, (int) GTAWantedDisplayMod.instance.nowWanted, 0);
 
     }
 
-    private void draw(String a)
+    private void draw(int... stars)
     {
+        int width = Minecraft.getInstance().getMainWindow().getWidth() / 2;
 
-
-        FontRenderer fr = Minecraft.getInstance().fontRenderer;
-
-        int width = Minecraft.getInstance().getMainWindow().getScaledWidth() / 2;
-        int height = Minecraft.getInstance().getMainWindow().getScaledHeight() / 2;
-        System.out.println(GTAWantedDisplayMod.instance.maxWanted);
-        System.out.println(GTAWantedDisplayMod.instance.nowWanted);
+        int line = 1;
+        int count = 1;
+        int buffer = 0;
+        for(int star: stars)
+                draw(line * 10, width - ((count++ * 16) + 2), star);
     }
 
     private static void draw(int x, int y, int index)
     {
-
-        ResourceLocation starLocation = new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star.png");
-        Minecraft.getInstance().getRenderManager().textureManager.bindTexture(starLocation);
+        final int size = 16;
+        Minecraft.getInstance().getRenderManager().textureManager.bindTexture(stars[index]);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
         //AbstractGui.blit(int x, int y, int textureX, int textureY, int width, int height, int textureWidth, int textureHeight);
-        AbstractGui.blit(x, y, 0, index * 150, 32, 32, 150, 150);
-
+        // AbstractGui.blit(x, y, 0, 0, size, size, size * 3, size);
+        AbstractGui.blit(x, y, 0, 0, size, size, size, size);
+        //AbstractGui.blit(0, 0, 0, 0, 0, 32, 32, 32, 32);
     }
 
     //Some blit param namings , thank you Mekanism
@@ -104,4 +112,5 @@ public class RenderEvent
     //blit(int x, int y, int zLevel, float textureX, float textureY, int width, int height, int textureWidth, int textureHeight);
     //blit(int x, int y, int desiredWidth, int desiredHeight, int textureX, int textureY, int width, int height, int textureWidth, int textureHeight);
     //innerBlit(int x, int endX, int y, int endY, int zLevel, int width, int height, float textureX, float textureY, int textureWidth, int textureHeight);
+
 }

@@ -20,8 +20,8 @@ public class RenderUtil
     {
         FontRenderer fr = Minecraft.getInstance().fontRenderer;
         Rect client = new Rect(
-                Minecraft.getInstance().func_228018_at_().getWidth() / 2,
-                Minecraft.getInstance().func_228018_at_().getHeight() / 2);
+                Minecraft.getInstance().getMainWindow().getWidth() / 2,
+                Minecraft.getInstance().getMainWindow().getHeight() / 2);
 
         Rect rect = new Rect(0, 0, fr.getStringWidth(text), fr.getWordWrappedHeight(text, Integer.MAX_VALUE));
         int color = getColor(255, 255, 255);

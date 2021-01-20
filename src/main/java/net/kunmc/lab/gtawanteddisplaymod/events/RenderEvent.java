@@ -1,10 +1,18 @@
 package net.kunmc.lab.gtawanteddisplaymod.events;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.kunmc.lab.gtawanteddisplaymod.GTAWantedDisplayMod;
 import net.kunmc.lab.gtawanteddisplaymod.utils.RenderUtil;
+import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -58,8 +66,10 @@ public class RenderEvent
         return xb.toString();
     }
 
+    private final ResourceLocation starLocation = new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star.png");
+
     @SubscribeEvent
-    public void onRender(final RenderGameOverlayEvent.Pre event)
+    public void onRender(final RenderGameOverlayEvent.Post event)
     {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
             return;
@@ -67,17 +77,22 @@ public class RenderEvent
         if (GTAWantedDisplayMod.instance.maxWanted == 0 || GTAWantedDisplayMod.instance.nowWanted == 0)
             return;
 
+        Minecraft.getInstance().getRenderManager().textureManager.bindTexture(starLocation);
+        RenderSystem.color3f(1.0F, 1.0F, 1.0F);
+        AbstractGui.blit(0, 0, 0, 0, 0, 32, 32, 32, 32);
+
         FontRenderer fr = Minecraft.getInstance().fontRenderer;
 
         String display = genWantedStars();
-        int width = Minecraft.getInstance().func_228018_at_().getWidth() / 2;
-        int height = Minecraft.getInstance().func_228018_at_().getHeight() / 2;
+        int width = Minecraft.getInstance().getMainWindow().getScaledWidth() / 2;
+        int height = Minecraft.getInstance().getMainWindow().getScaledHeight() / 2;
         System.out.println("H:" + height);
         System.out.println("W:" + width);
         int PADDING = 10;
 
         float size = 1f;
-        GL11.glScalef(size, size, size);
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(size, size, size);
         int stringSize = fr.getStringWidth(StringUtils.split(display, ',')[0]);
         float mSize = (float) Math.pow(size, -1);
         AtomicInteger par = new AtomicInteger();
@@ -91,7 +106,6 @@ public class RenderEvent
                             RenderUtil.Style.WITH_SHADOW);
                     par.set(par.get() + 11);
                 });
-        GL11.glScalef(mSize, mSize, mSize);
-
+        RenderSystem.popMatrix();
     }
 }

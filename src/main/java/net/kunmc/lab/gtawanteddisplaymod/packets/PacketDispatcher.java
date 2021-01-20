@@ -19,7 +19,7 @@ public class PacketDispatcher
                 .named(new ResourceLocation(channelAndPath[0], channelAndPath[1]))
                 .clientAcceptedVersions(NetworkRegistry.ACCEPTVANILLA::equals)
                 .serverAcceptedVersions(NetworkRegistry.ACCEPTVANILLA::equals)
-                .networkProtocolVersion(() -> "1")
+                .networkProtocolVersion(() -> "我こそはJavaの神なり")
                 .simpleChannel();
 
         channel.registerMessage(0, PacketContainer.class,

@@ -2,6 +2,7 @@ package net.kunmc.lab.gtawanteddisplaymod.utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import org.lwjgl.opengl.GL11;
 
 public class RenderUtil
 {
@@ -26,6 +27,7 @@ public class RenderUtil
         Rect rect = new Rect(0, 0, fr.getStringWidth(text), fr.getWordWrappedHeight(text, Integer.MAX_VALUE));
         int color = getColor(255, 255, 255);
         Margin margin = new Margin();
+        double scale = 1.0;
         boolean withShadow = false;
 
         Style horizontal = null;
@@ -88,6 +90,9 @@ public class RenderUtil
             }
         }
 
+
+        GL11.glScaled(scale, scale, scale);
+
         if (horizontal == Style.HORIZONTAL_LEFT) {
             rect.x = margin.left;
         } else if (horizontal == Style.HORIZONTAL_CENTER) {
@@ -100,7 +105,14 @@ public class RenderUtil
         }
 
         if (vertical == Style.VERTICAL_TOP) {
-
+            rect.y = margin.top;
+        } else if (vertical == Style.VERTICAL_CENTER) {
+            rect.y = (client.height - rect.height) / 2;
+        } else if (vertical == Style.VERTICAL_BOTTOM) {
+            rect.y = client.height - rect.height - margin.bottom;
+        } else {
+            rect.y -= Math.min(rect.y - margin.top, 0);
+            rect.y -= Math.max(rect.y + rect.height + margin.bottom - client.height, 0);
         }
 
         if (withShadow)

@@ -39,34 +39,27 @@ public class RenderEvent
         String nowS = StringUtils.repeat(wantedStar, (int) Math.floor(now));
         String maxS = StringUtils.repeat(noWantedStar, (int) (max - Math.floor(now)));
         String completeStar = maxS + nowS;
-        Matcher matcher = pattern.matcher(completeStar);
-
-        StringBuilder xe = new StringBuilder();
-
-        while (matcher.find())
-            xe.append(matcher.group()).append(",");
 
         StringBuilder xb = new StringBuilder();
 
         boolean isPassed = false;
-        for (String a : xe.toString().split(""))
+        for (String a: completeStar.split(""))
             if (a.equals(String.valueOf(wantedStar)))
             {
                 if (!isPassed && GTAWantedDisplayMod.instance.accessFlag && String.valueOf(now).endsWith(".5"))
                 {
-                    xb.append(ChatFormatting.BLACK).append(a);
+                    xb.append("B");
                     isPassed = true;
                     continue;
                 }
-                xb.append(ChatFormatting.WHITE).append(a);
+                xb.append("W");
             }
             else
-                xb.append(ChatFormatting.DARK_GRAY).append(ChatFormatting.BOLD).append(a);
+                xb.append("D");
 
         return xb.toString();
     }
 
-    private final ResourceLocation starLocation = new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star.png");
 
     @SubscribeEvent
     public void onRender(final RenderGameOverlayEvent.Post event)
@@ -77,35 +70,38 @@ public class RenderEvent
         if (GTAWantedDisplayMod.instance.maxWanted == 0 || GTAWantedDisplayMod.instance.nowWanted == 0)
             return;
 
-        Minecraft.getInstance().getRenderManager().textureManager.bindTexture(starLocation);
-        RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-        AbstractGui.blit(0, 0, 0, 0, 0, 32, 32, 32, 32);
+        draw(genWantedStars());
+
+    }
+
+    private void draw(String a)
+    {
+
 
         FontRenderer fr = Minecraft.getInstance().fontRenderer;
 
-        String display = genWantedStars();
         int width = Minecraft.getInstance().getMainWindow().getScaledWidth() / 2;
         int height = Minecraft.getInstance().getMainWindow().getScaledHeight() / 2;
-        System.out.println("H:" + height);
-        System.out.println("W:" + width);
-        int PADDING = 10;
-
-        float size = 1f;
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(size, size, size);
-        int stringSize = fr.getStringWidth(StringUtils.split(display, ',')[0]);
-        float mSize = (float) Math.pow(size, -1);
-        AtomicInteger par = new AtomicInteger();
-        Arrays.stream(StringUtils.split(display, ','))
-                .forEachOrdered(s -> {
-                    RenderUtil.drawText(s,
-                            RenderUtil.Style.HORIZONTAL_RIGHT,
-                            RenderUtil.Style.Y.setValue(20 + par.get()),
-                            RenderUtil.Style.MARGIN.setValue(20),
-                            RenderUtil.Style.COLOR.setValue(RenderUtil.getColor(255, 0, 0)),
-                            RenderUtil.Style.WITH_SHADOW);
-                    par.set(par.get() + 11);
-                });
-        RenderSystem.popMatrix();
+        System.out.println(GTAWantedDisplayMod.instance.maxWanted);
+        System.out.println(GTAWantedDisplayMod.instance.nowWanted);
     }
+
+    private static void draw(int x, int y, int index)
+    {
+
+        ResourceLocation starLocation = new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star.png");
+        Minecraft.getInstance().getRenderManager().textureManager.bindTexture(starLocation);
+        RenderSystem.color3f(1.0F, 1.0F, 1.0F);
+        //AbstractGui.blit(int x, int y, int textureX, int textureY, int width, int height, int textureWidth, int textureHeight);
+        AbstractGui.blit(x, y, 0, index * 150, 32, 32, 150, 150);
+
+    }
+
+    //Some blit param namings , thank you Mekanism
+    //blit(int x, int y, int textureX, int textureY, int width, int height);
+    //blit(int x, int y, TextureAtlasSprite icon, int width, int height);
+    //blit(int x, int y, int textureX, int textureY, int width, int height, int textureWidth, int textureHeight);
+    //blit(int x, int y, int zLevel, float textureX, float textureY, int width, int height, int textureWidth, int textureHeight);
+    //blit(int x, int y, int desiredWidth, int desiredHeight, int textureX, int textureY, int width, int height, int textureWidth, int textureHeight);
+    //innerBlit(int x, int endX, int y, int endY, int zLevel, int width, int height, float textureX, float textureY, int textureWidth, int textureHeight);
 }

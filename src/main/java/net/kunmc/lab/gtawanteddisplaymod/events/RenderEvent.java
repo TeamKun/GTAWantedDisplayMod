@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 
 public class RenderEvent
 {
-    public static Pattern pattern = Pattern.compile(".{1,5}");
-
     private static final ResourceLocation[] stars = {
             new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star_black.png"),
             new ResourceLocation(GTAWantedDisplayMod.MOD_ID, "textures/gui/star_gray.png"),
@@ -31,6 +29,8 @@ public class RenderEvent
         for (int i = 0; i < max; i++) {
             if (i < now)
                 if (GTAWantedDisplayMod.instance.blinkFlag)
+                    list.add(2);
+                else if ((GTAWantedDisplayMod.instance.flags & 0x01) != 0x01)
                     list.add(2);
                 else
                     list.add(0);

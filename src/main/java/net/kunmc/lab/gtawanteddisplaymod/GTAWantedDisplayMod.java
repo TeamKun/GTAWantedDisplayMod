@@ -45,8 +45,6 @@ public class GTAWantedDisplayMod
         if (Flag.BLINK.check(flags)) {
             blinkFlag = false;
             return;
-        } else if (Flag.RAINBOW.check(flags)) {
-            // hoge
         }
 
         if (timer > 60)
@@ -58,8 +56,8 @@ public class GTAWantedDisplayMod
     }
 
     private enum Flag {
-        BLINK(0x01),
-        RAINBOW(0x02);
+        NONE(0x00),
+        BLINK(0x01);
 
         private final int value;
 

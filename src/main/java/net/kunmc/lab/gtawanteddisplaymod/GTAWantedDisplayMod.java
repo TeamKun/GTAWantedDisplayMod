@@ -70,6 +70,14 @@ public class GTAWantedDisplayMod
         public boolean check(int value) {
             return (this.value & value) == this.value;
         }
+
+        public static int encode(Flag... flags)
+        {
+            int flag = 0;
+            for(Flag f: flags)
+                flag |= f.value;
+            return flag;
+        }
     }
 
 }

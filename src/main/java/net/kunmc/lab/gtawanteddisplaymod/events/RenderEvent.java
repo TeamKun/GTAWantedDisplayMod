@@ -51,20 +51,26 @@ public class RenderEvent
 
     }
 
-    private void draw(int... stars)
+    private void draw(int... indexes)
     {
         int width = Minecraft.getInstance().getMainWindow().getScaledWidth();
 
         int line = 1;
         int count = 1;
-        for (int star : stars)
+        int previous = 114514;
+
+        for (int index : indexes)
         {
             if (count > 10)
             {
                 count = 1;
                 line++;
             }
-            draw(width - ((count++ * 16) + 2), line * 10, star);
+
+            if (index != previous)
+                Minecraft.getInstance().getRenderManager().textureManager.bindTexture(stars[index]);
+            draw(width - ((count++ * 16) + 2), line * 10, index);
+            previous = index;
         }
 
     }
@@ -72,7 +78,6 @@ public class RenderEvent
     private static void draw(int x, int y, int index)
     {
         final int size = 16;
-        Minecraft.getInstance().getRenderManager().textureManager.bindTexture(stars[index]);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         AbstractGui.blit(x, y, 0, 0, size, size, size, size);

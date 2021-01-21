@@ -29,11 +29,9 @@ public class RenderEvent
         for (int i = 0; i < max; i++) {
             if (i < now)
                 if (GTAWantedDisplayMod.instance.blinkFlag)
-                    list.add(2);
-                else if ((GTAWantedDisplayMod.instance.flags & 0x01) != 0x01)
-                    list.add(2);
-                else
                     list.add(0);
+                else
+                    list.add(2);
             else
                 list.add(1);
         }

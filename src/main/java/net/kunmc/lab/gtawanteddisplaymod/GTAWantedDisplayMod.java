@@ -42,9 +42,11 @@ public class GTAWantedDisplayMod
     @SubscribeEvent
     public void onTick(TickEvent e)
     {
-        if ((flags & 0x01) != 0x01) {
+        if (Flag.BLINK.check(flags)) {
             blinkFlag = false;
             return;
+        } else if (Flag.RAINBOW.check(flags)) {
+            // hoge
         }
 
         if (timer > 60)
@@ -53,6 +55,21 @@ public class GTAWantedDisplayMod
             timer = 0;
         }
         timer++;
+    }
+
+    private enum Flag {
+        BLINK(0x01),
+        RAINBOW(0x02);
+
+        private final int value;
+
+        Flag(int value) {
+            this.value = value;
+        }
+
+        public boolean check(int value) {
+            return (this.value & value) == this.value;
+        }
     }
 
 }

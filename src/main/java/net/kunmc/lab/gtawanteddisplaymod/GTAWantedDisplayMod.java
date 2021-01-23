@@ -17,7 +17,7 @@ public class GTAWantedDisplayMod
     public int nowWanted;
     public int flags;
 
-    private int timer;
+    private float timer;
     public boolean blinkFlag;
 
     private final PacketDispatcher packetDispatcher;
@@ -47,15 +47,11 @@ public class GTAWantedDisplayMod
             return;
         }
 
-        if (timer > 60)
-        {
+        if (Math.sin(System.currentTimeMillis() / timer) > 0)
             blinkFlag = !blinkFlag;
-            timer = 0;
-        }
-        timer++;
     }
 
-    private enum Flag {
+    public enum Flag {
         NONE(0x00),
         BLINK(0x01);
 

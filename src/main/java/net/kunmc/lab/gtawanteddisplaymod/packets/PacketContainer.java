@@ -7,6 +7,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 public class PacketContainer
@@ -14,12 +15,14 @@ public class PacketContainer
     private final int maxWanted;
     private final int nowWanted;
     private final int flags;
+    private final int[] flagvalues;
 
-    public PacketContainer(int nowWanted, int maxWanted, int flags)
+    public PacketContainer(int nowWanted, int maxWanted, int flags, int[] flagvalues)
     {
         this.nowWanted = nowWanted;
         this.maxWanted = maxWanted;
         this.flags = flags;
+        this.flagvalues = flagvalues;
     }
 
     public static void encode(PacketContainer message, PacketBuffer buffer)
@@ -42,19 +45,22 @@ public class PacketContainer
             bytes = ArrayUtils.remove(bytes, 0);
             String messageString = StringUtils.toEncodedString(bytes, StandardCharsets.UTF_8);
             String[] messageWorker = StringUtils.split(messageString, "|");
-            if (messageWorker.length != 3)
+            if (messageWorker.length < 3)
                 throw new IllegalArgumentException("Malformed packet received.");
 
             int now = Integer.parseInt(messageWorker[0]);
             int max = Integer.parseInt(messageWorker[1]);
             int flags = Integer.parseInt(messageWorker[2]);
+            ArrayList<Integer> v = new ArrayList<>();
+            if (GTAWantedDisplayMod.Flag.BLINK.check(flags))
+                v.add(Integer.parseInt(messageWorker[3]));
 
-            return new PacketContainer(now, max, flags);
+            return new PacketContainer(now, max, flags, ArrayUtils.toPrimitive(v.toArray(new Integer[0])));
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            return new PacketContainer(0, 0, 0);
+            return new PacketContainer(0, 0, 0, new int[]{0});
         }
     }
 

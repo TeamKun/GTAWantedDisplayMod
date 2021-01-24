@@ -16,8 +16,8 @@ public class GTAWantedDisplayMod
     public int maxWanted;
     public int nowWanted;
     public int flags;
+    public int timer;
 
-    private float timer;
     public boolean blinkFlag;
 
     private final PacketDispatcher packetDispatcher;
@@ -47,8 +47,9 @@ public class GTAWantedDisplayMod
             return;
         }
 
-        if (Math.sin(System.currentTimeMillis() / timer) > 0)
-            blinkFlag = !blinkFlag;
+        System.out.println(Math.sin(System.currentTimeMillis() / timer));
+        System.out.println(timer);
+        blinkFlag = Math.sin(System.currentTimeMillis() / timer) > 0;
     }
 
     public enum Flag {

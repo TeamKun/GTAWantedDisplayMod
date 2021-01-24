@@ -69,6 +69,8 @@ public class PacketContainer
         GTAWantedDisplayMod.instance.nowWanted = message.nowWanted;
         GTAWantedDisplayMod.instance.maxWanted = message.maxWanted;
         GTAWantedDisplayMod.instance.flags = message.flags;
+        if (GTAWantedDisplayMod.Flag.BLINK.check(message.flags))
+            GTAWantedDisplayMod.instance.timer = message.flagvalues[0];
         ctx.get().setPacketHandled(true);
     }
 

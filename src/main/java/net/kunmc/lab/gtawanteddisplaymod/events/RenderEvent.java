@@ -45,7 +45,7 @@ public class RenderEvent
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
             return;
 
-        if (GTAWantedDisplayMod.instance.maxWanted == 0 || GTAWantedDisplayMod.instance.nowWanted == 0)
+        if (GTAWantedDisplayMod.instance.maxWanted == 0 && GTAWantedDisplayMod.instance.nowWanted == 0)
             return;
         draw(genWantedStars());
 

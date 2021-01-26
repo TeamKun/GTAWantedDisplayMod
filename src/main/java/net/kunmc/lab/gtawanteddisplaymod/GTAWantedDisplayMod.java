@@ -42,13 +42,11 @@ public class GTAWantedDisplayMod
     @SubscribeEvent
     public void onTick(TickEvent e)
     {
-        if (!Flag.BLINK.check(flags)) {
+        if (!Flag.BLINK.check(flags) || timer == 0) {
             blinkFlag = false;
             return;
         }
 
-        System.out.println(Math.sin(System.currentTimeMillis() / timer));
-        System.out.println(timer);
         blinkFlag = Math.sin(System.currentTimeMillis() / timer) > 0;
     }
 

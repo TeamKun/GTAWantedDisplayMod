@@ -26,7 +26,7 @@ public class GTAWantedDisplayMod
     {
         instance = this;
 
-        maxWanted = 10;
+        maxWanted = 0;
         nowWanted = 0;
         flags = 0x00;
 

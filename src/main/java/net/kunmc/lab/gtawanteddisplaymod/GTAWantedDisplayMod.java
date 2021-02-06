@@ -47,7 +47,7 @@ public class GTAWantedDisplayMod
             return;
         }
 
-        blinkFlag = Math.sin(System.currentTimeMillis() / timer) > 0;
+        blinkFlag = System.currentTimeMillis() % timer > timer / 2;
     }
 
     public enum Flag {
